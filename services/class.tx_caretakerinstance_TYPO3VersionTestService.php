@@ -105,7 +105,21 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 		if (strpos($versionString, '.latest') !== FALSE) {
 			$versionDigits = explode('.', $versionString, 3);
 			$latestVersions = t3lib_div::makeInstance('t3lib_Registry')->get('tx_caretaker', 'TYPO3versions');
+			$securityVersions = t3lib_div::makeInstance('t3lib_Registry')->get('tx_caretaker', 'TYPO3versionsSecurity');
 			$newVersionString = $latestVersions[$versionDigits[0] . '.' . $versionDigits[1]];
+
+			if (!empty($newVersionString)) {
+				$versionString = $newVersionString;
+			} else {
+					// if we reach this point, no "current version was "latest" was found. This can be caused by a not running TYPO3 Version update task.
+				return FALSE;
+			}
+		}
+		if (strpos($versionString, '.security') !== FALSE) {
+			$versionDigits = explode('.', $versionString, 3);
+			$latestVersions = t3lib_div::makeInstance('t3lib_Registry')->get('tx_caretaker', 'TYPO3versions');
+			$securityVersions = t3lib_div::makeInstance('t3lib_Registry')->get('tx_caretaker', 'TYPO3versionsSecurity');
+			$newVersionString = $securityVersions[$versionDigits[0] . '.' . $versionDigits[1]];
 
 			if (!empty($newVersionString)) {
 				$versionString = $newVersionString;
